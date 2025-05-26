@@ -1,0 +1,40 @@
+name: CD PIPELINE
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build project
+        run: mvn clean install -DskipTests
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Build Docker image
+        run: docker build -t clau2005/event_ntfy .
+      - name: Push Docker image
+        run: docker push clau2005/event_ntfy
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from Docker Hub
+        run: sudo docker pull clau2005/event_ntfy:latest
+      - name: Remove existing container
+        run: sudo docker rm -f event_ntfy
+      - name: Run Docker container
+        run: sudo docker run -d -p 8080:8080 -e DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -e DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" -e SMS_PHONE_NUMBER="${{ secrets.SMS_PHONE_NUMBER }}" -e SMS_AUTH_TOKEN="${{ secrets.SMS_AUTH_TOKEN }}" -e SMS_ACCOUNT_SID="${{ secrets.SMS_ACCOUNT_SID }}" -e EMAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}" -e EMAIL_USERNAME="${{ secrets.EMAIL_USERNAME }}" --name event_ntfy clau2005/event_ntfy:latest
