@@ -25,6 +25,7 @@ jobs:
 
       - name: Maven Clean Install (skip tests)
         run: mvn clean install -DskipTests=true
+        working-directory: ./atividaderedes
 
   tests:
     name: Run Tests
@@ -43,4 +44,4 @@ jobs:
 
       - name: Run Tests
         run: mvn test
-        working-directory: ./atividades-redes
+        working-directory: ./atividaderedes
