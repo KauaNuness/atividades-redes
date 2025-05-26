@@ -32,19 +32,12 @@ jobs:
 
       - name: Maven Clean Install
         run: |
-          mvn clean install -DskipTests=true # Build sem executar testes
+          mvn clean install -DskipTests=true
 
   tests:
     name: Run Tests
     runs-on: ubuntu-latest
     needs: build
-
-    env:
-      EMAIL_USERNAME: ${{secrets.EMAIL_USERNAME}}
-      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      SMS_ACCOUNT_SID: ${{ secrets.SMS_ACCOUNT_SID }}
-      SMS_AUTH_TOKEN: ${{ secrets.SMS_AUTH_TOKEN }}
-      SMS_PHONE_NUMBER: ${{ secrets.SMS_PHONE_NUMBER }}
 
     steps:
       - name: Checkout code
@@ -62,5 +55,4 @@ jobs:
           echo "Using application-test.properties for tests"
 
       - name: Run Tests
-        run: |
-          mvn test # Executa somente os testes
+        run: mvn test
