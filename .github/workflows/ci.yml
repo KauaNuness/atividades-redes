@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
   build:
@@ -25,14 +23,8 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Use application-test.properties for build
-        run: |
-          cp src/main/resources/application-test.properties src/main/resources/application.properties
-          echo "Using application-test.properties for build"
-
       - name: Maven Clean Install
-        run: |
-          mvn clean install -DskipTests=true
+        run: mvn clean install -DskipTests=true
 
   tests:
     name: Run Tests
@@ -48,11 +40,6 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-
-      - name: Use application-test.properties for tests
-        run: |
-          cp src/main/resources/application-test.properties src/main/resources/application.properties
-          echo "Using application-test.properties for tests"
 
       - name: Run Tests
         run: mvn test
