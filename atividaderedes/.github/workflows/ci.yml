@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Instalar dependências
+        run: mvn clean install
+
+      - name: Rodar testes
+        run: mvn test
+
+      - name: Construir aplicação
+        run: mvn package
+
+      - name: Publicar artefatos
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: target/*.jar
