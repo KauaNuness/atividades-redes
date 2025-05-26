@@ -23,8 +23,8 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Maven Clean Install (skip tests)
-        run: mvn clean install -DskipTests=true
+      - name: Maven Clean Install (run tests)
+        run: mvn clean install
         working-directory: ./atividaderedes
 
   tests:
