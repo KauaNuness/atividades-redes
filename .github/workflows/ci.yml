@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
   build:
@@ -27,7 +25,6 @@ jobs:
 
       - name: Maven Clean Install (skip tests)
         run: mvn clean install -DskipTests=true
-        working-directory: ./atividades-redes
 
   tests:
     name: Run Tests
